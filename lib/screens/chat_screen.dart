@@ -39,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
         leading: null,
         actions: <Widget>[
@@ -78,7 +79,13 @@ class _ChatScreenState extends State<ChatScreen> {
                       _firestore.collection('messages').add({
                         'text': messageText,
                         'sender': loggedInUser.email,
+                        'ts': Timestamp.now(),
                       });
+                      stream:
+                      _firestore
+                          .collection('messages')
+                          .orderBy('ts', descending: true)
+                          .snapshots();
                     },
                     child: Text(
                       'Send',
@@ -137,11 +144,12 @@ class MessagesStream extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble({this.sender, this.text, this.isMe});
+  MessageBubble({this.sender, this.text, this.isMe, this.time});
 
   final String sender;
   final String text;
   final bool isMe;
+  final Timestamp time;
 
   @override
   Widget build(BuildContext context) {
@@ -154,21 +162,16 @@ class MessageBubble extends StatelessWidget {
           Text(
             sender,
             style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black54,
+              fontSize: 13.0,
+              color: Colors.white60,
             ),
           ),
           Material(
-            borderRadius: isMe
-                ? BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0))
-                : BorderRadius.only(
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(isMe ? 30 : 0),
+                topRight: Radius.circular(isMe ? 0 : 30),
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30)),
             elevation: 5.0,
             color: isMe ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
@@ -176,7 +179,7 @@ class MessageBubble extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black54,
+                  color: isMe ? Colors.white : Colors.black,
                   fontSize: 15.0,
                 ),
               ),

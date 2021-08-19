@@ -20,7 +20,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blueGrey,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: Padding(
@@ -78,12 +78,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     if (newUser != null) {
                       Navigator.pushNamed(context, ChatScreen.id);
                     }
-
+                  } catch (e) {
+                    print(e);
+                  } finally {
                     setState(() {
                       showSpinner = false;
                     });
-                  } catch (e) {
-                    print(e);
                   }
                 },
               ),

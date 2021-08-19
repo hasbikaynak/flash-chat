@@ -8,7 +8,7 @@ void main() => runApp(FlashChat());
 
 class FlashChat extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  
     return MaterialApp(
       initialRoute: WelcomeScreen.id,
       routes: {
